@@ -1,11 +1,15 @@
 if ($response.status === 200) {
-  var body = $response.body; 
-  var obj = JSON.parse(body);
-  if ("feature_gates" in obj) {
-    for (var key in obj["feature_gates"]) {
-       obj["feature_gates"][key]["value"] = true;
+  const body = $response.body; 
+  let obj = JSON.parse(body);
+  if ("feature_gates" in obj && typeof obj["feature_gates"] === 'object') {
+    for (const key in obj["feature_gates"]) {
+       if (obj["feature_gates"].hasOwnProperty(key)) {
+         obj["feature_gates"][key]["value"] = true;
+       }
     }
   }
-  body = JSON.stringify(obj);
+  const modifiedBody = JSON.stringify(obj);
+  $done(modifiedBody);
+} else {
+  $done($response.body);
 }
-$done(body);
