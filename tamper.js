@@ -1,11 +1,12 @@
-(function() {
-  let response = JSON.parse($response.body);
-  if (response.feature_gates) {
-    for (let key in response.feature_gates) {
-      if (response.feature_gates[key] === false) {
-        response.feature_gates[key] = true;
+var body = $response.body;
+  if ($response.status === 200) {
+    var obj = JSON.parse(body);
+    if ("feature_gates" in obj) {
+      for (var key in obj["feature_gates"]) {
+        // Cambiar todas las 'feature gates' a true
+        obj["feature_gates"][key]["value"] = true;
       }
     }
+    body = JSON.stringify(obj);
   }
-  $done({body: JSON.stringify(response)});
-})();
+  $done(body);
